@@ -12,7 +12,7 @@ export class LegalitiesController {
   @Get('/terms-of-use')
   async getTermsOfUse(): Promise<StreamableFile> {
     const file = await this.minioStorage.download(
-      'terms-of-use.png',
+      'terms-of-use.pdf',
       BucketType.legalities,
     );
     return new StreamableFile(file);
@@ -22,7 +22,7 @@ export class LegalitiesController {
   @Get('/privacy-policy')
   async getPrivacyPolicy(): Promise<StreamableFile> {
     const file = await this.minioStorage.download(
-      'privacy-policy.png',
+      'privacy-policy.pdf',
       BucketType.legalities,
     );
     return new StreamableFile(file);
