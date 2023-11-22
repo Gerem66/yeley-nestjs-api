@@ -19,7 +19,7 @@ export class EstablishmentsService {
   async createEstablishment(
     establishment: CreateEstablishmentDto,
   ): Promise<EstablishmentEntity> {
-    const createdEstablishment = await this.establishmentsModel.create({
+    let createdEstablishment = await this.establishmentsModel.create({
       name: establishment.name,
       tags: establishment.tags,
       fullAddress: establishment.fullAddress,
@@ -30,6 +30,7 @@ export class EstablishmentsService {
         coordinates: establishment.coordinates,
       },
     });
+    createdEstablishment = await createdEstablishment.populate('tags');
     return EstablishmentEntity.fromJson(createdEstablishment);
   }
 
@@ -45,7 +46,7 @@ export class EstablishmentsService {
     for (const file of files) {
       const path = await this.minioStorage.upload(
         file,
-        BucketType.establishment,
+        BucketType.establishments,
       );
       uploadFilesPaths.push(path);
     }
@@ -66,7 +67,7 @@ export class EstablishmentsService {
       $pull: { picturesPaths: { $in: picturesPaths } },
     });
     for (const picturePath of picturesPaths) {
-      await this.minioStorage.remove(picturePath, BucketType.establishment);
+      await this.minioStorage.remove(picturePath, BucketType.establishments);
     }
   }
 }

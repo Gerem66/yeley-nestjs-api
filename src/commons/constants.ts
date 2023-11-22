@@ -8,18 +8,10 @@ export enum EstablishmentType {
   activity = 'activity',
 }
 
-export enum Tags {
-  mexican = 'mexican',
-  italian = 'italian',
-  indian = 'indian',
-  dance = 'dance',
-  music = 'music',
-  basketball = 'basketball',
-}
-
 export enum BucketType {
-  establishment = 'establishment',
+  establishments = 'establishments',
   legalities = 'legalities',
+  tags = 'tags',
 }
 
 export const MINIO = 'MINIO';

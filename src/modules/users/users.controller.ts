@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
@@ -63,6 +64,7 @@ export class UsersController {
   async getNearbyEstablishments(
     @Body() dto: GetNearbyEstablishmentsDto,
     @IdFromJWT() userId: string,
+    @Query('liked') liked: string | null,
   ): Promise<NearbyEstablishmentsDto> {
     const { coordinates, range, type, tags } = dto;
     const nearbyEstablishments = await this.userService.getNearbyEstablishments(
@@ -71,6 +73,7 @@ export class UsersController {
       range,
       type,
       tags,
+      liked,
     );
     return new NearbyEstablishmentsDto({
       nearbyEstablishments: nearbyEstablishments,

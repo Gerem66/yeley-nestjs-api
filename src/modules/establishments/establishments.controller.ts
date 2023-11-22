@@ -108,7 +108,7 @@ export class EstablishmentsController {
   ): Promise<StreamableFile> {
     const file = await this.minioStorage.download(
       picturePath,
-      BucketType.establishment,
+      BucketType.establishments,
     );
     return new StreamableFile(file);
   }

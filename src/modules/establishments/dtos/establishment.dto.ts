@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { EstablishmentType, Tags } from 'src/commons/constants';
+import { EstablishmentType } from 'src/commons/constants';
+import { TagDto } from 'src/modules/tags/dtos/tag.dto';
 
 export class EstablishmentDto {
   constructor(parameters: EstablishmentDto) {
@@ -12,8 +13,8 @@ export class EstablishmentDto {
   @ApiProperty({ example: 'Paul Bakery' })
   name: string;
 
-  @ApiProperty({ example: [Tags.mexican, Tags.mexican] })
-  tags: Tags[];
+  @ApiProperty({ example: ['<tag>', '<tag>'] })
+  tags: TagDto[];
 
   @ApiProperty({ example: '9 rue du plaisir, Montpellier, 34000' })
   fullAddress: string;

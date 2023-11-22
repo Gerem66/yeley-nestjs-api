@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import mongoose from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './users.schema';
-import { AccountStatus, EstablishmentType, Tags } from 'src/commons/constants';
+import { AccountStatus, EstablishmentType } from 'src/commons/constants';
 import { Establishment } from 'src/modules/establishments/establishments.schema';
 import { EstablishmentNotFoundException } from 'src/commons/errors/security/establishment-not-found';
 import { EstablishmentEntity } from 'src/modules/establishments/establishments.entity';
@@ -59,6 +59,7 @@ export class UsersService {
     const user = await this.userModel
       .findById(userId)
       .populate('likedEstablishments');
+    await user.populate('likedEstablishments.tags');
     return EstablishmentEntity.fromJsons(user.likedEstablishments);
   }
 
@@ -67,22 +68,14 @@ export class UsersService {
     coordinates: number[],
     range: number,
     type: EstablishmentType,
-    tags: Tags[],
+    tags: string[],
+    liked: string,
   ): Promise<EstablishmentEntity[]> {
     const user = await this.userModel.findById(userId);
     const { likedEstablishments, unlikedEstablishments } = user;
 
-    const establishments = await this.establishmentsModel.find({
+    const query: any = {
       type,
-      _id: {
-        // Liked or unliked establishments are excluded.
-        $nin: likedEstablishments.concat(unlikedEstablishments),
-      },
-      tags: {
-        $elemMatch: {
-          $in: tags.length === 0 ? Object.values(Tags) : tags,
-        },
-      },
       geolocation: {
         $near: {
           // ! Coordinates are [Long, Lat] !
@@ -91,7 +84,33 @@ export class UsersService {
           $maxDistance: range * 1000,
         },
       },
-    });
+    };
+
+    if (tags.length > 0) {
+      query.tags = {
+        $elemMatch: {
+          $in: tags,
+        },
+      };
+    }
+
+    // Search in favorites
+    if (liked === 'true') {
+      query._id = {
+        $in: likedEstablishments,
+      };
+    } else {
+      // Or in all establishments not liked yet.
+
+      query._id = {
+        // Liked or unliked establishments are excluded.
+        $nin: likedEstablishments.concat(unlikedEstablishments),
+      };
+    }
+
+    const establishments = await this.establishmentsModel
+      .find(query)
+      .populate('tags');
     return EstablishmentEntity.fromJsons(establishments);
   }
 }

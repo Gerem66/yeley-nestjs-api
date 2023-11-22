@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
-import { EstablishmentType, Tags } from 'src/commons/constants';
+import mongoose, { HydratedDocument } from 'mongoose';
+import { EstablishmentType } from 'src/commons/constants';
+import { Tag } from 'src/modules/tags/tags.schema';
 
 export type EstablishmentDocument = HydratedDocument<Establishment>;
 
@@ -9,8 +10,8 @@ export class Establishment {
   @Prop()
   name: string; // Paul Bakery
 
-  @Prop()
-  tags: Tags[]; // [Bakery, Bread]
+  @Prop([{ type: mongoose.Schema.Types.ObjectId, ref: 'Tag' }])
+  tags: mongoose.Types.ObjectId[] | Tag[];
 
   @Prop()
   fullAddress: string; // 11 rue de la machine, Lyon

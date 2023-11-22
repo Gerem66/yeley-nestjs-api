@@ -7,6 +7,7 @@ import { MinioModule } from 'src/modules/minio/minio.module';
 import { AuthModule } from 'src/modules/auth/auth.module';
 import { LegalitiesModule } from 'src/modules/legalities/legalities.module';
 import { EstablishmentsModule } from 'src/modules/establishments/establishment.module';
+import { TagsModule } from 'src/modules/tags/tags.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { EstablishmentsModule } from 'src/modules/establishments/establishment.m
     AuthModule,
     LegalitiesModule,
     EstablishmentsModule,
+    TagsModule,
   ],
 })
 export class AppModule {}

@@ -1,6 +1,6 @@
 import { IsArray, IsEnum, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { EstablishmentType, Tags } from 'src/commons/constants';
+import { EstablishmentType } from 'src/commons/constants';
 
 export class CreateEstablishmentDto {
   @ApiProperty({ example: 'Paul Bakery', description: 'Establishment name' })
@@ -9,13 +9,12 @@ export class CreateEstablishmentDto {
 
   @ApiProperty({
     description: 'Establishment type',
-    enum: Tags,
-    example: [Tags.indian, Tags.mexican],
+    example: ['<uuid>', '<uuid>'],
     isArray: true,
   })
-  @IsEnum(Tags, { each: true })
   @IsArray()
-  readonly tags: Tags[];
+  @IsString({ each: true })
+  readonly tags: string[];
 
   @ApiProperty({
     example: 'Paul 11 rue de la machine, Montpellier, 34000',

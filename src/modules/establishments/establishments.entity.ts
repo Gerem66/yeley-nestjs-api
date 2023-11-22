@@ -1,9 +1,10 @@
-import { EstablishmentType, Tags } from 'src/commons/constants';
+import { EstablishmentType } from 'src/commons/constants';
+import { TagEntity } from 'src/modules/tags/tags.entity';
 
 export class EstablishmentEntity {
   id: string;
   name: string;
-  tags: Tags[];
+  tags: TagEntity[];
   fullAddress: string;
   coordinates: number[];
   picturesPaths: string[];
@@ -24,7 +25,7 @@ export class EstablishmentEntity {
     const establishment = new EstablishmentEntity({
       id: json._id,
       name: json.name,
-      tags: json.tags as Tags[],
+      tags: TagEntity.fromJsons(json.tags),
       fullAddress: json.fullAddress,
       coordinates: json.geolocation.coordinates,
       picturesPaths: json.picturesPaths,

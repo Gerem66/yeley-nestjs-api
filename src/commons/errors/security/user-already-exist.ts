@@ -8,7 +8,7 @@ export class UserAlreadyExistException extends ConflictException {
         message: 'User already exists',
       },
       {
-        description: 'A user with the same email/phone already exists',
+        description: 'A user with the same email already exists',
       },
     );
   }

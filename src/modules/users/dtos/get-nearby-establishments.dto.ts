@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsEnum, IsNumber } from 'class-validator';
-import { EstablishmentType, Tags } from 'src/commons/constants';
+import { IsArray, IsEnum, IsNumber, IsString } from 'class-validator';
+import { EstablishmentType } from 'src/commons/constants';
 
 export class GetNearbyEstablishmentsDto {
   constructor(parameters: GetNearbyEstablishmentsDto) {
@@ -27,11 +27,11 @@ export class GetNearbyEstablishmentsDto {
   type: EstablishmentType;
 
   @ApiProperty({
-    example: [Tags.indian, Tags.mexican],
+    example: ['<uuid>', '<uuid>'],
     description: 'Tags used as filters',
     isArray: true,
   })
-  @IsEnum(Tags, { each: true })
+  @IsString({ each: true })
   @IsArray()
-  tags: Tags[];
+  tags: string[];
 }
