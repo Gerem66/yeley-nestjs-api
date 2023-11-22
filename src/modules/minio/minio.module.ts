@@ -5,11 +5,11 @@ import { MinioStorage } from 'src/commons/minio/minio';
 const minioProvider: Provider = {
   provide: MINIO,
   useValue: new MinioStorage({
-    endPoint: '127.0.0.1',
+    endPoint: 'minio',
     port: 9000,
-    useSSL: false,
-    accessKey: process.env.MINIO_ACCESS_KEY ?? 'minioadmin',
-    secretKey: process.env.MINIO_SECRET_KEY ?? 'minioadmin',
+    useSSL: process.env.MINIO_SCHEME === 'https',
+    accessKey: process.env.MINIO_ACCESS_KEY ?? 'minio-root-user',
+    secretKey: process.env.MINIO_SECRET_KEY ?? 'minio-root-password',
   }),
 };
 
