@@ -5,12 +5,8 @@ services:
     image: api
     build:
       dockerfile: ./Dockerfile
-    environment:
-      MINIO_SERVER_ACCESS_KEY: ${MINIO_SERVER_ACCESS_KEY:-minio-root-user}
-      MINIO_SERVER_SECRET_KEY: ${MINIO_SERVER_SECRET_KEY:-minio-root-password}
-      MINIO_SCHEME: ${MINIO_SCHEME:-http}
-      JWT_SECRET: ${JWT_SECRET:-secret}
-      DATABASE_URL: mongodb+srv://admin:26K0siZS2la7jean@prod.awwh6d6.mongodb.net/dev
+    env_file:
+      - .env
     ports:
       - "8080:3000"
     depends_on:
@@ -21,11 +17,8 @@ services:
     ports:
       - "9000:9000"
       - "9001:9001"
-    environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minio-root-user}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minio-root-password}
-      MINIO_SCHEME: ${MINIO_SCHEME:-http}
-      MINIO_DEFAULT_BUCKETS: establishments,legalities,tags
+    env_file:
+      - .env
     volumes:
       - minio_data:/data
 
