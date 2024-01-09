@@ -1,4 +1,10 @@
-import { Controller, Get, Inject, StreamableFile } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Inject,
+  StreamableFile,
+  Header,
+} from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BucketType, MINIO } from 'src/commons/constants';
 import { MinioStorage } from 'src/commons/minio/minio';
@@ -9,6 +15,7 @@ export class LegalitiesController {
   constructor(@Inject(MINIO) private minioStorage: MinioStorage) {}
 
   @ApiOperation({ description: 'Stream terms of use document' })
+  @Header('Content-type', 'application/pdf')
   @Get('/terms-of-use')
   async getTermsOfUse(): Promise<StreamableFile> {
     const file = await this.minioStorage.download(
@@ -19,6 +26,7 @@ export class LegalitiesController {
   }
 
   @ApiOperation({ description: 'Stream privacy policy document' })
+  @Header('Content-type', 'application/pdf')
   @Get('/privacy-policy')
   async getPrivacyPolicy(): Promise<StreamableFile> {
     const file = await this.minioStorage.download(
