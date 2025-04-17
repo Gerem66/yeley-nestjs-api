@@ -33,7 +33,7 @@ export class AuthService {
     } as JwtContent);
   }
 
-  async login(user: LoginDto): Promise<string> {
+  async login(user: LoginDto): Promise<{ token: string, createdAt: Date }> {
     const { email, password } = user;
     const dbUser = await this.userModel.findOne({ email });
 
@@ -44,8 +44,10 @@ export class AuthService {
     if (!match) {
       throw new InvalidPasswordException();
     }
-    return await this.jwtService.signAsync({
+    const token = await this.jwtService.signAsync({
       id: dbUser._id.toString(),
     } as JwtContent);
+
+    return { token, createdAt: dbUser.createdAt };
   }
 }

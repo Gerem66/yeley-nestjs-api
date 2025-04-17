@@ -23,7 +23,7 @@ export class AuthController {
   @ApiResponse({ type: LoggedDto })
   @Post('login')
   async login(@Body() dto: LoginDto) {
-    const accessToken = await this.authService.login(dto);
-    return new LoggedDto(accessToken);
+    const { token, createdAt } = await this.authService.login(dto);
+    return new LoggedDto(token, createdAt);
   }
 }
