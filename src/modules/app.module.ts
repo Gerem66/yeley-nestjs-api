@@ -8,6 +8,7 @@ import { AuthModule } from 'src/modules/auth/auth.module';
 import { LegalitiesModule } from 'src/modules/legalities/legalities.module';
 import { EstablishmentsModule } from 'src/modules/establishments/establishment.module';
 import { TagsModule } from 'src/modules/tags/tags.module';
+import { HealthModule } from 'src/modules/health/health.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { TagsModule } from 'src/modules/tags/tags.module';
     LegalitiesModule,
     EstablishmentsModule,
     TagsModule,
+    HealthModule,
   ],
 })
 export class AppModule {}
