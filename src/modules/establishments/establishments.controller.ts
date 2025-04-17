@@ -13,6 +13,7 @@ import {
   UploadedFiles,
   UseGuards,
   UseInterceptors,
+  NotFoundException,
 } from '@nestjs/common';
 import { EstablishmentsService } from './establishments.service';
 import {
@@ -106,10 +107,17 @@ export class EstablishmentsController {
   async getPicture(
     @Param('path') picturePath: string,
   ): Promise<StreamableFile> {
-    const file = await this.minioStorage.download(
-      picturePath,
-      BucketType.establishments,
-    );
-    return new StreamableFile(file);
+    try {
+      const file = await this.minioStorage.download(
+        picturePath,
+        BucketType.establishments,
+      );
+      return new StreamableFile(file);
+    } catch (error) {
+      if (error.code === 'NoSuchKey') {
+        throw new NotFoundException(`Image avec chemin ${picturePath} non trouvée`);
+      }
+      throw error;
+    }
   }
 }

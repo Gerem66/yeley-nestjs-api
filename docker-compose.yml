@@ -1,17 +1,18 @@
-version: "3.7"
-
 services:
   api:
     image: api
     build:
+      context: .
       dockerfile: ./Dockerfile
     env_file:
       - .env
     ports:
       - "8080:3000"
     depends_on:
-      - minio
-  
+      minio:
+        condition: service_healthy
+    restart: always
+
   minio:
     image: bitnami/minio:latest
     ports:
@@ -21,6 +22,12 @@ services:
       - .env
     volumes:
       - minio_data:/data
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
 volumes:
   minio_data:

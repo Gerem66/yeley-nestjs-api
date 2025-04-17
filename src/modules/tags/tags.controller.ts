@@ -5,6 +5,7 @@ import {
   FileTypeValidator,
   Get,
   Inject,
+  NotFoundException,
   Param,
   ParseFilePipe,
   Post,
@@ -98,7 +99,14 @@ export class TagsController {
   async getPicture(
     @Param('path') picturePath: string,
   ): Promise<StreamableFile> {
-    const file = await this.minioStorage.download(picturePath, BucketType.tags);
-    return new StreamableFile(file);
+    try {
+      const file = await this.minioStorage.download(picturePath, BucketType.tags);
+      return new StreamableFile(file);
+    } catch (error) {
+      if (error.code === 'NoSuchKey') {
+        throw new NotFoundException(`Image avec chemin ${picturePath} non trouvée`);
+      }
+      throw error;
+    }
   }
 }

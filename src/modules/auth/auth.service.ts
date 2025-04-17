@@ -20,9 +20,9 @@ export class AuthService {
 
   async signup(user: SignupDto): Promise<string> {
     const { email, password } = user;
-    const isPhone = await this.userModel.findOne({ email });
+    const dbUser = await this.userModel.findOne({ email });
 
-    if (isPhone) {
+    if (dbUser) {
       throw new UserAlreadyExistException();
     }
 
@@ -35,17 +35,17 @@ export class AuthService {
 
   async login(user: LoginDto): Promise<string> {
     const { email, password } = user;
-    const existingUser = await this.userModel.findOne({ email });
+    const dbUser = await this.userModel.findOne({ email });
 
-    if (!existingUser) {
+    if (!dbUser) {
       throw new UserNotFoundException();
     }
-    const match = await argon2.verify(existingUser.passwordHash, password);
+    const match = await argon2.verify(dbUser.passwordHash, password);
     if (!match) {
       throw new InvalidPasswordException();
     }
     return await this.jwtService.signAsync({
-      id: existingUser._id.toString(),
+      id: dbUser._id.toString(),
     } as JwtContent);
   }
 }
