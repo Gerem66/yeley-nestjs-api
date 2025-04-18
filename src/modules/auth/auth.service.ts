@@ -13,6 +13,8 @@ import { InvalidPasswordException } from 'src/commons/errors/security/invalid-pa
 import { EmailNotConfirmedException } from 'src/commons/errors/security/email-not-confirmed';
 import { MailService } from 'src/modules/mail/mail.service';
 import { v4 as uuidv4 } from 'uuid';
+import { ForgotPasswordDto } from './dtos/forgot-password.dto';
+import { ResetPasswordDto } from './dtos/reset-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -47,7 +49,7 @@ export class AuthService {
     return { message: 'Un email de confirmation a été envoyé à votre adresse email. Veuillez confirmer votre compte pour vous connecter.' };
   }
 
-  async login(user: LoginDto): Promise<{ token: string, createdAt: Date }> {
+  async login(user: LoginDto): Promise<{ accessToken: string, createdAt: Date }> {
     const { email, password } = user;
     const dbUser = await this.userModel.findOne({ email });
 
@@ -65,11 +67,11 @@ export class AuthService {
       throw new EmailNotConfirmedException();
     }
 
-    const token = await this.jwtService.signAsync({
+    const accessToken = await this.jwtService.signAsync({
       id: dbUser._id.toString(),
     } as JwtContent);
 
-    return { token, createdAt: dbUser.createdAt };
+    return { accessToken, createdAt: dbUser.createdAt };
   }
 
   async confirmEmail(token: string): Promise<void> {
@@ -86,5 +88,47 @@ export class AuthService {
     user.confirmationToken = null;
     user.confirmationTokenExpires = null;
     await user.save();
+  }
+
+  async forgotPassword(forgotPasswordDto: ForgotPasswordDto): Promise<{ message: string }> {
+    const { email } = forgotPasswordDto;
+    const user = await this.userModel.findOne({ email });
+
+    // Même si l'utilisateur n'existe pas, on renvoie un message positif pour des raisons de sécurité
+    if (!user || !user.isEmailConfirmed) {
+      return { message: 'Si un compte existe avec cette adresse email, un lien de réinitialisation a été envoyé.' };
+    }
+
+    const resetPasswordToken = uuidv4();
+    const resetPasswordExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 heure
+
+    user.resetPasswordToken = resetPasswordToken;
+    user.resetPasswordExpires = resetPasswordExpires;
+    await user.save();
+
+    await this.mailService.sendPasswordReset(user, resetPasswordToken);
+
+    return { message: 'Un email contenant un lien de réinitialisation de mot de passe a été envoyé.' };
+  }
+
+  async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<{ message: string }> {
+    const { token, password } = resetPasswordDto;
+    const user = await this.userModel.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: new Date() }
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('Le lien de réinitialisation est invalide ou a expiré.');
+    }
+
+    const passwordHash = await argon2.hash(password);
+
+    user.passwordHash = passwordHash;
+    user.resetPasswordToken = null;
+    user.resetPasswordExpires = null;
+    await user.save();
+
+    return { message: 'Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter.' };
   }
 }

@@ -35,7 +35,7 @@ export class MailService {
   }
 
   async sendPasswordReset(user: User, token: string) {
-    const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/reset-password?token=${token}`;
+    const resetUrl = `${process.env.API_URL || 'https://api.yeley.fr'}/auth/reset-password?token=${token}`;
 
     await this.mailerService.sendMail({
       to: user.email,

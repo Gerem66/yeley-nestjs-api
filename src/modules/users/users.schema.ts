@@ -26,6 +26,12 @@ export class User {
   @Prop({ nullable: true })
   confirmationTokenExpires: Date;
 
+  @Prop({ nullable: true })
+  resetPasswordToken: string;
+
+  @Prop({ nullable: true })
+  resetPasswordExpires: Date;
+
   @Prop({
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Establishment',
