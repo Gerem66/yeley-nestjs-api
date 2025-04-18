@@ -8,6 +8,7 @@ import { AuthModule } from 'src/modules/auth/auth.module';
 import { LegalitiesModule } from 'src/modules/legalities/legalities.module';
 import { EstablishmentsModule } from 'src/modules/establishments/establishment.module';
 import { TagsModule } from 'src/modules/tags/tags.module';
+import { MailModule } from 'src/modules/mail/mail.module';
 import { HealthModule } from 'src/modules/health/health.module';
 
 @Module({
@@ -32,6 +33,7 @@ import { HealthModule } from 'src/modules/health/health.module';
     LegalitiesModule,
     EstablishmentsModule,
     TagsModule,
+    MailModule,
     HealthModule,
   ],
 })

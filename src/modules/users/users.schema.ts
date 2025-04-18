@@ -17,6 +17,15 @@ export class User {
   @Prop({ default: AccountStatus.active })
   accountStatus: AccountStatus;
 
+  @Prop({ default: false })
+  isEmailConfirmed: boolean;
+
+  @Prop({ nullable: true })
+  confirmationToken: string;
+
+  @Prop({ nullable: true })
+  confirmationTokenExpires: Date;
+
   @Prop({
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Establishment',
