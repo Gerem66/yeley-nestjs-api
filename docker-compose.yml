@@ -1,5 +1,6 @@
 services:
   api:
+    container_name: yeley-api
     image: api
     build:
       context: .
@@ -14,6 +15,7 @@ services:
     restart: always
 
   minio:
+    container_name: minio
     image: bitnami/minio:latest
     ports:
       - "9000:9000"
@@ -21,7 +23,7 @@ services:
     env_file:
       - .env
     volumes:
-      - minio_data:/data
+      - minio_data_persist:/bitnami/minio/data
     restart: always
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
@@ -30,4 +32,5 @@ services:
       retries: 3
 
 volumes:
-  minio_data:
+  minio_data_persist:
+    external: true
