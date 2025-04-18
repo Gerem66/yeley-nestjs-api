@@ -48,6 +48,15 @@ export class UsersController {
     await this.userService.unlikeEstablishment(userId, establishmentId);
   }
 
+  @ApiOperation({ description: 'Add to the disliked establishment list' })
+  @Get('/dislike/establishment/:id')
+  async dislikeEstablishment(
+    @Param('id') establishmentId: string,
+    @IdFromJWT() userId: string,
+  ) {
+    await this.userService.dislikeEstablishment(userId, establishmentId);
+  }
+
   @ApiOperation({ description: 'Add to the liked establishment list' })
   @Get('/liked/establishments')
   async getlikedEstablishments(

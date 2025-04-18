@@ -50,6 +50,32 @@ export class UsersService {
       throw new EstablishmentNotFoundException();
     }
 
+    // Vérifier si l'établissement est dans les likedEstablishments de l'utilisateur
+    const user = await this.userModel.findById(userId);
+    const isLiked = user.likedEstablishments.includes(establishmentId as unknown as Establishment);
+
+    // S'il est dans les likedEstablishments, le retirer et décrémenter le compteur de likes
+    if (isLiked) {
+      await this.userModel.findByIdAndUpdate(userId, {
+        $pull: { likedEstablishments: establishmentId },
+      });
+
+      await this.establishmentsModel.findByIdAndUpdate(establishmentId, {
+        $inc: { likes: -1 },
+      });
+    }
+  }
+
+  async dislikeEstablishment(
+    userId: string, 
+    establishmentId: string,
+  ): Promise<void> {
+    const exist = await this.establishmentsModel.findById(establishmentId);
+    if (!exist) {
+      throw new EstablishmentNotFoundException();
+    }
+
+    // Ajouter l'établissement à la liste des établissements dislikés
     await this.userModel.findByIdAndUpdate(userId, {
       $addToSet: { unlikedEstablishments: establishmentId },
     });
@@ -100,8 +126,7 @@ export class UsersService {
         $in: likedEstablishments,
       };
     } else {
-      // Or in all establishments not liked yet.
-
+      // Or in all establishments not liked/disliked yet.
       query._id = {
         // Liked or unliked establishments are excluded.
         $nin: likedEstablishments.concat(unlikedEstablishments),
