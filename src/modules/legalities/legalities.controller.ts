@@ -50,4 +50,22 @@ export class LegalitiesController {
       throw error;
     }
   }
+
+  @ApiOperation({ description: 'Stream legal information document' })
+  @Header('Content-type', 'application/pdf')
+  @Get('/legal-information')
+  async getLegalInformation(): Promise<StreamableFile> {
+    try {
+      const file = await this.minioStorage.download(
+        'legal-information.pdf',
+        BucketType.legalities,
+      );
+      return new StreamableFile(file);
+    } catch (error) {
+      if (error.code === 'NoSuchKey') {
+        throw new NotFoundException('Le document d\'informations légales n\'est pas disponible');
+      }
+      throw error;
+    }
+  }
 }
