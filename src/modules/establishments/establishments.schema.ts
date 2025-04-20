@@ -36,6 +36,27 @@ export class Establishment {
 
   @Prop({ default: Date.now() })
   createdAt: Date;
+
+  @Prop({ required: false })
+  price: string;
+
+  @Prop({ required: false })
+  capacity: string;
+
+  @Prop({ required: false })
+  about: string;
+
+  @Prop({ required: false })
+  schedules: string;
+
+  @Prop({ required: false })
+  strongPoint: string;
+
+  @Prop({ required: false })
+  goodToKnow: string;
+
+  @Prop({ required: false })
+  forbiddenOnSite: string;
 }
 
 export const EstablishmentSchema = SchemaFactory.createForClass(Establishment);

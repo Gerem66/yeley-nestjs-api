@@ -12,9 +12,33 @@ export class EstablishmentEntity {
   phone: string;
   type: EstablishmentType;
   createdAt: Date;
+  price: string | null;
+  capacity: string | null;
+  about: string | null;
+  schedules: string | null;
+  strongPoint: string | null;
+  goodToKnow: string | null;
+  forbiddenOnSite: string | null;
 
-  constructor(parameters: EstablishmentEntity) {
-    Object.assign(this, parameters);
+  constructor(parameters: Partial<EstablishmentEntity>) {
+    this.id = parameters.id;
+    this.name = parameters.name;
+    this.tags = parameters.tags;
+    this.fullAddress = parameters.fullAddress;
+    this.coordinates = parameters.coordinates;
+    this.picturesPaths = parameters.picturesPaths;
+    this.likes = parameters.likes;
+    this.phone = parameters.phone;
+    this.type = parameters.type;
+    this.createdAt = parameters.createdAt;
+
+    this.price = parameters.price ?? null;
+    this.capacity = parameters.capacity ?? null;
+    this.about = parameters.about ?? null;
+    this.schedules = parameters.schedules ?? null;
+    this.strongPoint = parameters.strongPoint ?? null;
+    this.goodToKnow = parameters.goodToKnow ?? null;
+    this.forbiddenOnSite = parameters.forbiddenOnSite ?? null;
   }
 
   static fromJson(json: any): EstablishmentEntity | null {
@@ -27,12 +51,19 @@ export class EstablishmentEntity {
       name: json.name,
       tags: TagEntity.fromJsons(json.tags),
       fullAddress: json.fullAddress,
-      coordinates: json.geolocation.coordinates,
+      coordinates: json.geolocation ? json.geolocation.coordinates : [],
       picturesPaths: json.picturesPaths,
       likes: json.likes,
       phone: json.phone,
       type: json.type as EstablishmentType,
       createdAt: json.createdAt,
+      price: json.price ?? null,
+      capacity: json.capacity ?? null,
+      about: json.about ?? null,
+      schedules: json.schedules ?? null,
+      strongPoint: json.strongPoint ?? null,
+      goodToKnow: json.goodToKnow ?? null,
+      forbiddenOnSite: json.forbiddenOnSite ?? null,
     });
 
     return establishment;

@@ -36,4 +36,25 @@ export class EstablishmentDto {
 
   @ApiProperty({ example: '<date>' })
   createdAt: Date;
+
+  @ApiProperty({ example: 'À partir de 13€', required: false })
+  price?: string;
+
+  @ApiProperty({ example: 'Nouveau', required: false })
+  capacity?: string;
+
+  @ApiProperty({ example: 'Restaurant français haut de gamme...', required: false })
+  about?: string;
+
+  @ApiProperty({ example: 'Lun-Jeu: 18 h 30 à 00h00...', required: false })
+  schedules?: string;
+
+  @ApiProperty({ example: 'Wi-fi, Climatisation, Voiturier...', required: false })
+  strongPoint?: string;
+
+  @ApiProperty({ example: 'Proche commodité, Paiement par Swile...', required: false })
+  goodToKnow?: string;
+
+  @ApiProperty({ example: '•animaux •cigarette •Vapoteuse', required: false })
+  forbiddenOnSite?: string;
 }
