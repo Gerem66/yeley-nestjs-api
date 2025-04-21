@@ -54,10 +54,11 @@ export class UsersService {
     const user = await this.userModel.findById(userId);
     const isLiked = user.likedEstablishments.includes(establishmentId as unknown as Establishment);
 
-    // S'il est dans les likedEstablishments, le retirer et décrémenter le compteur de likes
+    // S'il est dans les likedEstablishments, le retirer et décrémenter le compteur de likes, et l'ajouter à la liste des dislikedEstablishments
     if (isLiked) {
       await this.userModel.findByIdAndUpdate(userId, {
         $pull: { likedEstablishments: establishmentId },
+        $addToSet: { unlikedEstablishments: establishmentId },
       });
 
       await this.establishmentsModel.findByIdAndUpdate(establishmentId, {
