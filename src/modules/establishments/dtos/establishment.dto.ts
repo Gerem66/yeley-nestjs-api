@@ -57,4 +57,7 @@ export class EstablishmentDto {
 
   @ApiProperty({ example: '•animaux •cigarette •Vapoteuse', required: false })
   forbiddenOnSite?: string;
+
+  @ApiProperty({ example: true, required: false, description: 'Priorité de l\'établissement pour le tri' })
+  priority?: boolean;
 }

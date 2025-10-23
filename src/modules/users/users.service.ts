@@ -85,8 +85,12 @@ export class UsersService {
   async getLikedEstablishments(userId: string): Promise<EstablishmentEntity[]> {
     const user = await this.userModel
       .findById(userId)
-      .populate('likedEstablishments');
-    await user.populate('likedEstablishments.tags');
+      .populate({
+        path: 'likedEstablishments',
+        options: { sort: { priority: -1 } }, // Tri côté MongoDB (priority: true en premier)
+        populate: { path: 'tags' }
+      });
+
     return EstablishmentEntity.fromJsons(user.likedEstablishments);
   }
 
@@ -136,6 +140,7 @@ export class UsersService {
 
     const establishments = await this.establishmentsModel
       .find(query)
+      .sort({ priority: -1 }) // Trier par priority: true d'abord (descending)
       .populate('tags');
     return EstablishmentEntity.fromJsons(establishments);
   }

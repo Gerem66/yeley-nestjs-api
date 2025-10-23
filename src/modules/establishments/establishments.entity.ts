@@ -19,6 +19,7 @@ export class EstablishmentEntity {
   strongPoint: string | null;
   goodToKnow: string | null;
   forbiddenOnSite: string | null;
+  priority: boolean | null;
 
   constructor(parameters: Partial<EstablishmentEntity>) {
     this.id = parameters.id;
@@ -64,6 +65,7 @@ export class EstablishmentEntity {
       strongPoint: json.strongPoint ?? null,
       goodToKnow: json.goodToKnow ?? null,
       forbiddenOnSite: json.forbiddenOnSite ?? null,
+      priority: json.priority ?? null,
     });
 
     return establishment;

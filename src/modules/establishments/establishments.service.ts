@@ -25,6 +25,7 @@ export class EstablishmentsService {
       fullAddress: establishment.fullAddress,
       phone: establishment.phone,
       type: establishment.type,
+      priority: establishment.priority,
       geolocation: {
         type: 'Point',
         coordinates: establishment.coordinates,

@@ -20,6 +20,7 @@ export class EstablishmentMapper {
       phone: entity.phone,
       type: entity.type,
       createdAt: entity.createdAt,
+      priority: entity.priority,
     });
   }
 }

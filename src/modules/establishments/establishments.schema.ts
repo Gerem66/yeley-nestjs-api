@@ -57,6 +57,9 @@ export class Establishment {
 
   @Prop({ required: false })
   forbiddenOnSite: string;
+
+  @Prop({ required: false, default: false })
+  priority: boolean;
 }
 
 export const EstablishmentSchema = SchemaFactory.createForClass(Establishment);

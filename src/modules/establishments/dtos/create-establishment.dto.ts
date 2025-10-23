@@ -1,4 +1,4 @@
-import { IsArray, IsEnum, IsString } from 'class-validator';
+import { IsArray, IsEnum, IsString, IsBoolean, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { EstablishmentType } from 'src/commons/constants';
 
@@ -45,4 +45,13 @@ export class CreateEstablishmentDto {
   })
   @IsEnum(EstablishmentType)
   readonly type: EstablishmentType;
+
+  @ApiProperty({
+    example: true,
+    description: 'Priorité de l\'établissement pour le tri',
+    required: false,
+  })
+  @IsOptional()
+  @IsBoolean()
+  readonly priority?: boolean;
 }
