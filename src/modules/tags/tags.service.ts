@@ -18,7 +18,19 @@ export class TagsService {
 
   async getAll(): Promise<TagEntity[]> {
     const tags = await this.tagsModel.find();
-    return TagEntity.fromJsons(tags);
+    const tagEntities = TagEntity.fromJsons(tags);
+
+    // Faire remonter les deux tags prioritaires en premier ("coup de coeur")
+    const priorityIds = ['6560477ad6910673f298f92b', '65dfcf1696c32c675970ff95'];
+    priorityIds.forEach(id => {
+      const index = tagEntities.findIndex(tag => tag.id == id);
+      if (index > 0) {
+        const tag = tagEntities.splice(index, 1)[0];
+        tagEntities.unshift(tag);
+      }
+    });
+
+    return tagEntities;
   }
 
   async create(tag: CreateTagDto): Promise<TagEntity> {
